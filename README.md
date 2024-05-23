@@ -16,7 +16,7 @@ This is quite useful because if we have a program that could identify if a given
 
 ## Models
 
-![diagram](/Diagrama%20en%20blanco(5))
+![diagram](Diagrama en blanco(5).png)
 
 ## Implementation
 ## Test
