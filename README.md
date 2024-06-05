@@ -1,5 +1,7 @@
 # Demonstration-of-a-Programming-Paradigm
 ## Description
+I decide to make a demostration of the logic programming paradigm using an automaton. The main idea of this paradigm is to use a mathematical demostration to model and validate systems.
+
 I solved the problem 65 of leetcode named "Valid Number". The problem tell us that with a given string we have to return True if that string is a valid number, otherwise we have to return False.
 
 A valid number is defined using one of the following descriptions:
@@ -31,20 +33,37 @@ These is the syntax i used inthe diagram
 First of all we have the creation of the DFA that is a object in python, and the definition of one of its methods. This method runs all over the given string and then moves through the states until the methon runs in the last character. This method also check if the character of the given string is in the alphabet of the DFA, otherwise the result will be False. 
 ```
 class DFA:
+    """Class to represent an automaton"""
     def __init__(self, states, alphabet, move, start, end):
+        """
+        Initialization of the automaton with its args.
+
+        Args:
+            states = the valid states of the automaton.
+            alphabet = range of characters accepted by the automaton.
+            move = a set of movements over witch the automaton could move.
+            start = first posible move.
+            end = a set of valid movements for the automaton.
+        """
         self.states = states
         self.alphabet = alphabet
         self.move = move
         self.start = start
         self.end = end
         self.current = start
-        
+
     def dfa(self, string):
+        """
+        Get a string that could be a valid nuumber or not.
+
+        Returns:
+            bool: True if the string is a valid number, False otherwise.
+        """
         self.current = self.start
         for char in string:
-            if char in self.alphabet: 
+            if char in self.alphabet:
                 self.current = self.move[self.current][char]
-            else: 
+            else:
                 return False
         return self.current in self.end
 ```
@@ -71,76 +90,68 @@ alphabet = {
 Then and most importantly we define the group of movements of our DFA. This movements are defined bether in the previous diagram, but here I want to highlight that we have an aditional state 'q8', this state represents the False case. The False case is important to exist because it highlight the cases where the results are invalid, and because the program will crash if it not receive a valid move acording to a valid character of the alphabet.
 ```
 move = {
-    'q0' : { # start 
-        '0' : 'q2', '1' : 'q2', '2' : 'q2', '3' : 'q2', '4' : 'q2',\
-        '5' : 'q2', '6' : 'q2', '7' : 'q2', '8' : 'q2', '9' : 'q2',\
-        '+' : 'q1', '-' : 'q1',\
-        'e' : 'q8', 'E' : 'q8',\
-        '.' : 'q3'
+    'q0': {  # start 
+        '0': 'q2', '1': 'q2', '2': 'q2', '3': 'q2', '4': 'q2',
+        '5': 'q2', '6': 'q2', '7': 'q2', '8': 'q2', '9': 'q2',
+        '+': 'q1', '-': 'q1',
+        'e': 'q8', 'E': 'q8',
+        '.': 'q3'
     },
-
-    'q1' : { # first sign
-        '0' : 'q2', '1' : 'q2', '2' : 'q2', '3' : 'q2', '4' : 'q2',\
-        '5' : 'q2', '6' : 'q2', '7' : 'q2', '8' : 'q2', '9' : 'q2',\
-        '+' : 'q8', '-' : 'q8',\
-        'e' : 'q8', 'E' : 'q8',\
-        '.' : 'q3'
+    'q1': {  # first sign
+        '0': 'q2', '1': 'q2', '2': 'q2', '3': 'q2', '4': 'q2',
+        '5': 'q2', '6': 'q2', '7': 'q2', '8': 'q2', '9': 'q2',
+        '+': 'q8', '-': 'q8',
+        'e': 'q8', 'E': 'q8',
+        '.': 'q3'
     },
-
-    'q2' : { # first digit
-        '0' : 'q2', '1' : 'q2', '2' : 'q2', '3' : 'q2', '4' : 'q2',\
-        '5' : 'q2', '6' : 'q2', '7' : 'q2', '8' : 'q2', '9' : 'q2',\
-        '+' : 'q8', '-' : 'q8',\
-        'e' : 'q5', 'E' : 'q5',\
-        '.' : 'q4'
+    'q2': {  # first digit
+        '0': 'q2', '1': 'q2', '2': 'q2', '3': 'q2', '4': 'q2',
+        '5': 'q2', '6': 'q2', '7': 'q2', '8': 'q2', '9': 'q2',
+        '+': 'q8', '-': 'q8',
+        'e': 'q5', 'E': 'q5',
+        '.': 'q4'
     },
-
-    'q3' : { # dot case
-        '0' : 'q4', '1' : 'q4', '2' : 'q4', '3' : 'q4', '4' : 'q4',\
-        '5' : 'q4', '6' : 'q4', '7' : 'q4', '8' : 'q4', '9' : 'q4',\
-        '+' : 'q8', '-' : 'q8',\
-        'e' : 'q8', 'E' : 'q8',\
-        '.' : 'q8'
+    'q3': {  # dot case
+        '0': 'q4', '1': 'q4', '2': 'q4', '3': 'q4', '4': 'q4',
+        '5': 'q4', '6': 'q4', '7': 'q4', '8': 'q4', '9': 'q4',
+        '+': 'q8', '-': 'q8',
+        'e': 'q8', 'E': 'q8',
+        '.': 'q8'
     },
-
-    'q4' : { # digits after dot
-        '0' : 'q4', '1' : 'q4', '2' : 'q4', '3' : 'q4', '4' : 'q4',\
-        '5' : 'q4', '6' : 'q4', '7' : 'q4', '8' : 'q4', '9' : 'q4',\
-        '+' : 'q8', '-' : 'q8',\
-        'e' : 'q5', 'E' : 'q5',\
-        '.' : 'q8'
+    'q4': {  # digits after dot
+        '0': 'q4', '1': 'q4', '2': 'q4', '3': 'q4', '4': 'q4',
+        '5': 'q4', '6': 'q4', '7': 'q4', '8': 'q4', '9': 'q4',
+        '+': 'q8', '-': 'q8',
+        'e': 'q5', 'E': 'q5',
+        '.': 'q8'
     },
-
-    'q5' : { # e E case
-        '0' : 'q7', '1' : 'q7', '2' : 'q7', '3' : 'q7', '4' : 'q7',\
-        '5' : 'q7', '6' : 'q7', '7' : 'q7', '8' : 'q7', '9' : 'q7',\
-        '+' : 'q6', '-' : 'q6',\
-        'e' : 'q8', 'E' : 'q8',\
-        '.' : 'q8'
+    'q5': {  # e E case
+        '0': 'q7', '1': 'q7', '2': 'q7', '3': 'q7', '4': 'q7',
+        '5': 'q7', '6': 'q7', '7': 'q7', '8': 'q7', '9': 'q7',
+        '+': 'q6', '-': 'q6',
+        'e': 'q8', 'E': 'q8',
+        '.': 'q8'
     },
-
-    'q6' : { # sign after e E
-        '0' : 'q7', '1' : 'q7', '2' : 'q7', '3' : 'q7', '4' : 'q7',\
-        '5' : 'q7', '6' : 'q7', '7' : 'q7', '8' : 'q7', '9' : 'q7',\
-        '+' : 'q8', '-' : 'q8',\
-        'e' : 'q8', 'E' : 'q8',\
-        '.' : 'q8'
+    'q6': {  # sign after e E
+        '0': 'q7', '1': 'q7', '2': 'q7', '3': 'q7', '4': 'q7',
+        '5': 'q7', '6': 'q7', '7': 'q7', '8': 'q7', '9': 'q7',
+        '+': 'q8', '-': 'q8',
+        'e': 'q8', 'E': 'q8',
+        '.': 'q8'
     },
-
-    'q7' : { # digits after e E
-        '0' : 'q7', '1' : 'q7', '2' : 'q7', '3' : 'q7', '4' : 'q7',\
-        '5' : 'q7', '6' : 'q7', '7' : 'q7', '8' : 'q7', '9' : 'q7',\
-        '+' : 'q8', '-' : 'q8',\
-        'e' : 'q8', 'E' : 'q8',\
-        '.' : 'q8'
+    'q7': {  # digits after e E
+        '0': 'q7', '1': 'q7', '2': 'q7', '3': 'q7', '4': 'q7',
+        '5': 'q7', '6': 'q7', '7': 'q7', '8': 'q7', '9': 'q7',
+        '+': 'q8', '-': 'q8',
+        'e': 'q8', 'E': 'q8',
+        '.': 'q8'
     },
-
-    'q8' : { # False case
-        '0' : 'q8', '1' : 'q8', '2' : 'q8', '3' : 'q8', '4' : 'q8',\
-        '5' : 'q8', '6' : 'q8', '7' : 'q8', '8' : 'q8', '9' : 'q8',\
-        '+' : 'q8', '-' : 'q8',\
-        'e' : 'q8', 'E' : 'q8',\
-        '.' : 'q8'
+    'q8': {  # False case
+        '0': 'q8', '1': 'q8', '2': 'q8', '3': 'q8', '4': 'q8',
+        '5': 'q8', '6': 'q8', '7': 'q8', '8': 'q8', '9': 'q8',
+        '+': 'q8', '-': 'q8',
+        'e': 'q8', 'E': 'q8',
+        '.': 'q8'
     }
 }
 ```
